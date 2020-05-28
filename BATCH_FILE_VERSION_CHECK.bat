@@ -174,3 +174,4 @@ rd /s /q "%temp%\VersionCheckWillDelete\"
 ECHO YOU ARE RUNNING THE MOST UP TO DATE BATCH FILE.
 
 PAUSE
+EXIT
