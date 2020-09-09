@@ -4,6 +4,8 @@
 
 @rem Special Thanks to COMPO over at StackOverflow: https://stackoverflow.com/questions/61803141/batch-file-delete-folder-contents-and-the-parent-folder
 
+@rem For this to work, your BAT file needs to have no spaces in the file name.
+
 @rem Create a "Version Check" file in your BATCH File GitHub code page such as the one found below and paste it in the GITHUB_VERSION_CHK_URL area.
 @rem Paste the GitHub releases page for your BATCH file in the BATCH_FILE_RELEASES_URL area.
 @rem Be sure to format the text found in the Version Check file as such: VERSION-(actual version name) .... Example: VERSION-1.1.2-RC
@@ -11,7 +13,7 @@
 @rem Use the following as an example
 
 @rem Set your version number here. Must be same case as on the version_check page.
-SET USER_VER=1.2
+SET USER_VER=1.2.1
 
 @rem Set your version check URL here
 SET GITHUB_VERSION_CHK_URL=https://github.com/KSanders7070/BATCH_FILE_VERSION_CHECK/blob/master/Version_Check
