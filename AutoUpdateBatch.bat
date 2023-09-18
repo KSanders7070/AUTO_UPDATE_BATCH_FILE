@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: Set SCRIPT_NAME to the name of this batch file script
-	set CURRENT_VERSION=2.0.b02
+	set CURRENT_VERSION=2.0
 
 :: Set SCRIPT_NAME to the name of this batch file script
 	set SCRIPT_NAME=Auto Update Testing
@@ -11,7 +11,7 @@ setlocal enabledelayedexpansion
 	set GH_USER_NAME=KSanders7070
 
 :: Set GH_REPO_NAME to your GitHub repository name here
-	set GH_REPO_NAME=BATCH_FILE_VERSION_CHECK
+	set GH_REPO_NAME=AUTO_UPDATE_BATCH_FILE
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -56,7 +56,8 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	)
 
 :DoYouHaveLatest
-
+	
+	:: If the current version matches the latest version available, contine on with normal code.
 	if "!CURRENT_VERSION!"=="!LATEST_VERSION!" goto RestOfCode
 
 :UpdateAvailablePrompt
@@ -107,10 +108,17 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 			GOTO UpdateAvailablePrompt
 	
 :AUTO_UPDATE
-		
+	
+	:: Sets the directory that this batch file is currently in.
 	SET CUR_BAT_DIR=%~dp0
+	
+	:: Sets the name of this batch file to this variable.
 	SET BAT_NAME=%~nx0
+	
+	:: Creates the URL to download the latest version of this batch file.
 	set FILE_URL=https://github.com/!GH_USER_NAME!/!GH_REPO_NAME!/releases/download/v!LATEST_VERSION!/!BAT_NAME!
+	
+	:: Sets the download file name to the same name as this batch file.
 	set DOWNLOAD_FILE_NAME=!BAT_NAME!
 
 	CLS
@@ -133,7 +141,13 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	ECHO.
 	
 	PAUSE
-
+	
+	:: Creates a small batch file that will be automatically launched and will:
+	::     1) Wait 5 seconds
+	::     2) Call the directory of this batch file
+	::     3) Will start a batch file by this same name however by the time
+	::        that is called, it is likely that this batch file will be
+	::        overwritten by the newly downloaded version.
 	CD /d "%temp%"
 		(
 		ECHO @ECHO OFF
@@ -177,6 +191,9 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 		IF exist "!GH_REPO_NAME!-UDPATE" RD /S /Q "!GH_REPO_NAME!-UDPATE"
 
 :RestOfCode
+	
+	:: Ensures the directory is back to where this batch file is hosted.
+	CD /D "%~dp0"
 	
 	CLS
 
