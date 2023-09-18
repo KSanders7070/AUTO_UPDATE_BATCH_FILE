@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: Set SCRIPT_NAME to the name of this batch file script
-	set CURRENT_VERSION=2.0.b01
+	set CURRENT_VERSION=2.0.b02
 
 :: Set SCRIPT_NAME to the name of this batch file script
 	set SCRIPT_NAME=Auto Update Testing
@@ -46,8 +46,7 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	
 	:: Use curl to fetch the JSON data
 	curl -s "%URL_TO_DOWNLOAD%">response.json
-	PAUSE
-	
+
 	:: Parse JSON and extract "tag_name"
 	for /f "tokens=*" %%A in ('type response.json ^| find /i "tag_name"') do (
 		set "line=%%A"
@@ -97,7 +96,7 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	SET /p UPDATE_CHOICE=Please type either A, M, or C and press Enter: 
 		if /I %UPDATE_CHOICE%==A GOTO AUTO_UPDATE
 		if /I %UPDATE_CHOICE%==M GOTO MANUAL_UPDATE
-		if /I %UPDATE_CHOICE%==C GOTO CONTINUE
+		if /I %UPDATE_CHOICE%==C GOTO RestOfCode
 		if /I %UPDATE_CHOICE%==NO_CHOICE_MADE GOTO UpdateAvailablePrompt
 			echo.
 			echo.
@@ -112,7 +111,7 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	SET CUR_BAT_DIR=%~dp0
 	SET BAT_NAME=%~nx0
 	set FILE_URL=https://github.com/!GH_USER_NAME!/!GH_REPO_NAME!/releases/download/v!LATEST_VERSION!/!BAT_NAME!
-	set DOWNLOAD_FILE_NAME=FE-ASSISTANT.bat
+	set DOWNLOAD_FILE_NAME=!BAT_NAME!
 
 	CLS
 	
