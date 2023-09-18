@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: Set SCRIPT_NAME to the name of this batch file script
-	set CURRENT_VERSION=2.0
+	set THIS_VERSION=2.0rc1
 
 :: Set SCRIPT_NAME to the name of this batch file script
 	set SCRIPT_NAME=Auto Update Testing
@@ -11,7 +11,7 @@ setlocal enabledelayedexpansion
 	set GH_USER_NAME=KSanders7070
 
 :: Set GH_REPO_NAME to your GitHub repository name here
-	set GH_REPO_NAME=AUTO_UPDATE_BATCH_FILE
+	set GH_REPO_NAME=BATCH_FILE_VERSION_CHECK
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -28,7 +28,7 @@ setlocal enabledelayedexpansion
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
+TITLE !SCRIPT_NAME! (v!THIS_VERSION!)
 
 :SetUpTempDir
 
@@ -47,7 +47,12 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	:: Use curl to fetch the JSON data
 	curl -s "%URL_TO_DOWNLOAD%">response.json
 
-	:: Parse JSON and extract "tag_name"
+	:: Notes for future developemnt:
+	:: 	Searches for lines containing the text "tag_name", and extract the values associated with "tag_name" into a variable named LATEST_VERSION.
+	:: 		Note-In this .json, there should only be one line with "tag_name" in it.
+	:: 	The command inside the single quotes ('...') reads the response.json file using the type command and pipes the output to find /i "tag_name"
+	:: 	which searches for lines containing the case-insensitive text "tag_name".
+	:: 	The rest of the !line! code is just striping the data way from the actual version number.
 	for /f "tokens=*" %%A in ('type response.json ^| find /i "tag_name"') do (
 		set "line=%%A"
 		set "line=!line:*"tag_name": =!"
@@ -58,7 +63,15 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 :DoYouHaveLatest
 	
 	:: If the current version matches the latest version available, contine on with normal code.
-	if "!CURRENT_VERSION!"=="!LATEST_VERSION!" goto RestOfCode
+	if "!THIS_VERSION!"=="!LATEST_VERSION!" (
+		
+		set VERSION_STATUS=---Running Latest Version---
+			TITLE !SCRIPT_NAME! (v!THIS_VERSION!)       !VERSION_STATUS!
+		goto UpdateCleanUp
+	)
+	
+	set VERSION_STATUS=---VERSION v!LATEST_VERSION! AVAILABLE---
+		TITLE !SCRIPT_NAME! (v!THIS_VERSION!)       !VERSION_STATUS!
 
 :UpdateAvailablePrompt
 
@@ -71,8 +84,8 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	ECHO * * * * * * * * * * * * *
 	ECHO.
 	ECHO.
+	ECHO YOUR VERSION:   !THIS_VERSION!
 	ECHO GITHUB VERSION: !LATEST_VERSION!
-	ECHO YOUR VERSION:   !CURRENT_VERSION!
 	ECHO.
 	ECHO.
 	ECHO.
@@ -97,7 +110,7 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	SET /p UPDATE_CHOICE=Please type either A, M, or C and press Enter: 
 		if /I %UPDATE_CHOICE%==A GOTO AUTO_UPDATE
 		if /I %UPDATE_CHOICE%==M GOTO MANUAL_UPDATE
-		if /I %UPDATE_CHOICE%==C GOTO RestOfCode
+		if /I %UPDATE_CHOICE%==C GOTO UpdateCleanUp
 		if /I %UPDATE_CHOICE%==NO_CHOICE_MADE GOTO UpdateAvailablePrompt
 			echo.
 			echo.
@@ -132,7 +145,7 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	ECHO.
 	ECHO   THIS SCREEN WILL CLOSE.
 	ECHO.
-	ECHO   WAIT 5 SECONDS
+	ECHO   WAIT 5 SECONDS.
 	ECHO.
 	ECHO   THE NEW UPDATED BATCH FILE WILL START BY ITSELF.
 	ECHO.
@@ -151,13 +164,17 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	CD /d "%temp%"
 		(
 		ECHO @ECHO OFF
+		ECHO.
+		ECHO Getting newest update; Please standby.
+		ECHO.
+		ECHO.
 		ECHO TIMEOUT 5
 		ECHO CD /d "%~dp0"
 		ECHO START %~nx0
 		ECHO EXIT
 		)>TempBatWillDelete.bat
 	
-	START /MIN TempBatWillDelete.bat
+	START "Update Waiting Message" TempBatWillDelete.bat
 	
 	CD /d "!CUR_BAT_DIR!"
 		curl -o %DOWNLOAD_FILE_NAME% -L %FILE_URL%
@@ -190,10 +207,13 @@ TITLE !SCRIPT_NAME! (v!CURRENT_VERSION!)
 	CD /D "%temp%"
 		IF exist "!GH_REPO_NAME!-UDPATE" RD /S /Q "!GH_REPO_NAME!-UDPATE"
 
-:RestOfCode
-	
 	:: Ensures the directory is back to where this batch file is hosted.
 	CD /D "%~dp0"
+
+endlocal 
+
+:RestOfCode
+:: This is where you start your normal code...
 	
 	CLS
 
