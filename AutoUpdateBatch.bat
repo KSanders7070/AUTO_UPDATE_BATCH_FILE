@@ -1,16 +1,16 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Set SCRIPT_NAME to the name of this batch file script
-	set THIS_VERSION=2.0.03
+	:: Set THIS_VERSION to the version of this batch file script
+	set THIS_VERSION=2.0.04
 
-:: Set SCRIPT_NAME to the name of this batch file script
+	:: Set SCRIPT_NAME to the name of this batch file script
 	set SCRIPT_NAME=Auto Update Testing
 
-:: Set GH_USER_NAME to your GitHub username here
+	:: Set GH_USER_NAME to your GitHub username here
 	set GH_USER_NAME=KSanders7070
 
-:: Set GH_REPO_NAME to your GitHub repository name here
+	:: Set GH_REPO_NAME to your GitHub repository name here
 	set GH_REPO_NAME=AUTO_UPDATE_BATCH_FILE
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
