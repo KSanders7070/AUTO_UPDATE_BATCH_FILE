@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 	:: Set THIS_VERSION to the version of this batch file script
-	set THIS_VERSION=2.0.04
+	set THIS_VERSION=2.0.05
 
 	:: Set SCRIPT_NAME to the name of this batch file script
 	set SCRIPT_NAME=Auto Update Testing
@@ -28,7 +28,7 @@ setlocal enabledelayedexpansion
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-TITLE !SCRIPT_NAME! (v!THIS_VERSION!)
+	TITLE !SCRIPT_NAME! (v!THIS_VERSION!)
 
 :SetUpTempDir
 
@@ -43,8 +43,7 @@ TITLE !SCRIPT_NAME! (v!THIS_VERSION!)
 
 	:: URL to fetch JSON data from GitHub API
 	set "GH_LATEST_RLS_PAGE=https://api.github.com/repos/!GH_USER_NAME!/!GH_REPO_NAME!/releases/latest"
-	::                      https://api.github.com/repos/KSanders7070/AUTO_UPDATE_BATCH_FILE/releases/latest
-		set "URL_TO_DOWNLOAD=!GH_LATEST_RLS_PAGE!"
+	set "URL_TO_DOWNLOAD=!GH_LATEST_RLS_PAGE!"
 	set "LATEST_VERSION="
 	
 	:RedirectLooop
@@ -153,7 +152,7 @@ TITLE !SCRIPT_NAME! (v!THIS_VERSION!)
 	SET /p UPDATE_CHOICE=Please type either M, or C and press Enter: 
 		if /I %UPDATE_CHOICE%==U GOTO UPDATE
 		if /I %UPDATE_CHOICE%==C GOTO UpdateCleanUp
-		if /I %UPDATE_CHOICE%==NO_CHOICE_MADE GOTO UpdateAvailablePrompt
+		goto UpdateAvailablePrompt
 	
 :UPDATE
 	
